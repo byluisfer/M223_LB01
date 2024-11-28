@@ -46,6 +46,16 @@ class Backend {
       const __dirname = resolve(dirname(''))
       res.sendFile(__dirname + '/client/index.html')
     })
+
+    this._app.get('/register', (req: Request, res: Response) => {
+      const __dirname = resolve(dirname(''))
+      res.sendFile(__dirname + '/client/register.html');
+    });
+
+    this._app.get('/login', (req: Request, res: Response) => {
+      const __dirname = resolve(dirname(''))
+      res.sendFile(__dirname + '/client/login.html');
+    });
   }
 
   private startServer(): void {
