@@ -31,7 +31,7 @@ class Backend {
     this._app = express()
     this._app.use(express.json()) // Middleware allows the app Express to parse JSON data
     // https://www.geeksforgeeks.org/express-js-express-urlencoded-function/
-    this._app.use(express.urlencoded()); // Middleware allows the app Express to parse URL-encoded data
+    this._app.use(express.urlencoded({ extended: true })); // Middleware allows the app Express to parse URL-encoded data
     this._database = new Database()
     this.manageUser = new manageUser(this._database)
     this._api = new API(this._app, this.manageUser)
