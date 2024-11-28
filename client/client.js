@@ -8,4 +8,9 @@ if (location.host.includes('localhost')) {
   )
 }
 
-console.log('This is a Test')
+// Automatic redirect to login
+if (window.location.pathname !== '/login') {
+  window.location.href = '/login';
+}
+
+console.log('This is a Test');
