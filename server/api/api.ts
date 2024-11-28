@@ -1,11 +1,14 @@
-import { Request, Response, Express } from 'express'
+import { Request, Response, Express, response } from 'express';
+import { manageUser } from '../types/user';
 
 export class API {
   // Properties
-  app: Express
+  app: Express;
+  manageUser: manageUser;
   // Constructor
-  constructor(app: Express) {
+  constructor(app: Express, manageUser: manageUser) {
     this.app = app
+    this.manageUser = manageUser
     this.app.get('/hello', this.sayHello)
   }
   // Methods

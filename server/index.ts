@@ -3,14 +3,7 @@ import { API } from './api'
 import http from 'http'
 import { resolve, dirname } from 'path'
 import { Database } from './database'
-import dotenv from 'dotenv';
-
-// get config vars
-dotenv.config();
-
-// access config var
-process.env.TOKEN_SECRET;
-console.log(process.env.TOKEN_SECRET)
+import { manageUser } from './types/user'
 
 class Backend {
   // Properties
@@ -18,6 +11,7 @@ class Backend {
   private _api: API
   private _database: Database
   private _env: string
+  private manageUser: manageUser
 
   // Getters
   public get app(): Express {
@@ -35,8 +29,12 @@ class Backend {
   // Constructor
   constructor() {
     this._app = express()
+    this._app.use(express.json()) // Middleware allows the app Express to parse JSON data
+    // https://www.geeksforgeeks.org/express-js-express-urlencoded-function/
+    this._app.use(express.urlencoded()); // Middleware allows the app Express to parse URL-encoded data
     this._database = new Database()
-    this._api = new API(this._app)
+    this.manageUser = new manageUser(this._database)
+    this._api = new API(this._app, this.manageUser)
     this._env = process.env.NODE_ENV || 'development'
 
     this.setupStaticFiles()
@@ -51,20 +49,24 @@ class Backend {
 
   private setupRoutes(): void {
     this._app.get('/', (req: Request, res: Response) => {
-      const __dirname = resolve(dirname(''))
-      res.sendFile(__dirname + '/client/index.html')
-    })
+        const __dirname = resolve(dirname(''));
+        res.sendFile(__dirname + '/client/index.html');
+    });
 
     this._app.get('/register', (req: Request, res: Response) => {
-      const __dirname = resolve(dirname(''))
-      res.sendFile(__dirname + '/client/register.html');
+        const __dirname = resolve(dirname(''));
+        res.sendFile(__dirname + '/client/register.html');
+    });
+
+    this._app.post('/register', (req: Request, res: Response) => {
+        this.manageUser.register(req, res);
     });
 
     this._app.get('/login', (req: Request, res: Response) => {
-      const __dirname = resolve(dirname(''))
-      res.sendFile(__dirname + '/client/login.html');
+        const __dirname = resolve(dirname(''));
+        res.sendFile(__dirname + '/client/login.html');
     });
-  }
+}
 
   private startServer(): void {
     if (this._env === 'production') {
