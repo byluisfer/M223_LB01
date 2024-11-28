@@ -3,6 +3,14 @@ import { API } from './api'
 import http from 'http'
 import { resolve, dirname } from 'path'
 import { Database } from './database'
+import dotenv from 'dotenv';
+
+// get config vars
+dotenv.config();
+
+// access config var
+process.env.TOKEN_SECRET;
+console.log(process.env.TOKEN_SECRET)
 
 class Backend {
   // Properties

@@ -14,7 +14,9 @@
     "prettify": "prettier --write server/**/*.ts"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "4.21.1",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.4",
     "vite-plugin-live-reload": "^3.0.3"
   },
