@@ -6,9 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="./output.css" rel="stylesheet">
     <script src="client.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>MiniTwitter</title>
   </head>
-  <body>
-    <h1 class="text-red-500">Simple Typescript Starter</h1>
+  <body class="flex items-start justify-center min-h-screen bg-background">
+    <div class="flex flex-col space-x-4 p-4 rounded-xl mt-10 max-w-2xl w-full h-44">
+      <button id="logoutBtn" class="absolute top-14 right-10 px-6 py-2 text-white bg-secondary rounded-lg hover:bg-red-500 focus:outline-none transition-colors duration-300">
+        Logout
+      </button>
+      
+      <div class="p-1 rounded-xl bg-primary w-full h-full drop-shadow-[0_0px_15px_rgba(242,242,242,0.3)]">
+        <input type="text" class="w-full p-4 bg-primary text-white outline-none" placeholder="What is happening?!" />
+        <button class="absolute bottom-4 right-4 px-4 py-2 text-white bg-secondary rounded-lg hover:bg-accent hover:text-black focus:outline-none transition-colors duration-300">
+          Post
+        </button>
+      </div>
+    </div>
+
+    <!-- Script to remove token and go to login -->
+    <script>
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        alert('🫡 Your are out');
+        window.location.href = '/login';
+      });
+    </script>
   </body>
 </html>
