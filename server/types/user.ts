@@ -38,6 +38,13 @@ export class manageUser {
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
+            const checkUsernameQuery = `SELECT * FROM users WHERE username = '${username}'`;
+            const existedUser = await this.db.executeSQL(checkUsernameQuery);
+
+            if (Array.isArray(existedUser) && existedUser.length > 0) { // https://stackoverflow.com/questions/55530602/property-length-does-not-exists-on-type-okpacket-in-mysql2-module
+                return res.status(400).json({ error: 'Username already exists' });
+            }
+
             const query = `INSERT INTO users (username, password) VALUES ('${username}', '${hashedPassword}')`;
             await this.db.executeSQL(query);
             
