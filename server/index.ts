@@ -62,6 +62,10 @@ class Backend {
         this.manageUser.register(req, res);
     });
 
+    this.app.post('/login', (req: Request, res: Response) => {
+      this.manageUser.login(req, res);
+    })
+
     this._app.get('/login', (req: Request, res: Response) => {
         const __dirname = resolve(dirname(''));
         res.sendFile(__dirname + '/client/login.html');

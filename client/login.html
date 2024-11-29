@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./output.css" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>MiniTwitter</title>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-background">
@@ -15,7 +16,7 @@
         Login in your account
       </p>
 
-      <form class="space-y-6">
+      <form id="loginForm" class="space-y-6">
         <div class="relative">
           <input
             placeholder="username"
@@ -63,5 +64,32 @@
         <a class="text-secondary hover:text-accent hover:underline transition-colors duration-300" href="/register.html">Register</a>
       </div>
     </div>
+
+    <script>
+      document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // https://www.w3schools.com/jsref/event_preventdefault.asp
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json(); // Take the respone (in JSON fromat) and convert it to a JavaScript object
+
+        if (response.ok) {
+            localStorage.setItem('token', data.token);
+            alert('👍 Login successful!');
+            window.location.href = '/';
+        } else {
+            alert(data.error || 'Invalid username or password.');
+        }
+      });
+    </script>
 </body>
 </html>

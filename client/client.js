@@ -8,9 +8,17 @@ if (location.host.includes('localhost')) {
   )
 }
 
-// Automatic redirect to login
-if (window.location.pathname !== '/login') {
-  window.location.href = '/login';
+// Verify token
+const token = localStorage.getItem('token');
+
+if (!token) {
+    if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+    }
+} else {
+    if (window.location.pathname === '/login') {
+        window.location.href = '/';
+    }
 }
 
 console.log('This is a Test');

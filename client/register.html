@@ -64,31 +64,30 @@
       </div>
     </div>
 
-    <!-- Script for save the JWT -->
+    <!-- Script to redirect to login -->
     <script>
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
-            event.preventDefault() // https://www.w3schools.com/jsref/event_preventdefault.asp
+          event.preventDefault(); // https://www.w3schools.com/jsref/event_preventdefault.asp
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
 
-            const response = await fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }), // Convert the data to JSON
-            });
+          const response = await fetch('/register', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, password }), // Convert the data to JSON
+          });
 
-            const data = await response.json(); // Take the respone (in JSON fromat) and convert it to a JavaScript object
+          const data = await response.json(); // Take the respone (in JSON fromat) and convert it to a JavaScript object
 
-            if (response.ok) {
-                localStorage.setItem('token', data.token);
-                alert('👍 Registration successful!');
-                window.location.href = '/login';
-            } else {
-                alert(data.error || 'An error occurred during registration.');
-            }
+          if (response.ok) {
+              alert('👍 Registration successful!');
+              window.location.href = '/login';
+          } else {
+              alert(data.error || 'An error occurred during registration.');
+          }
         });
     </script>
 </body>
