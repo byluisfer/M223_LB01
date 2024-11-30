@@ -1,18 +1,17 @@
-import { Request, Response, Express, response } from 'express';
+import { Request, Response, Express } from 'express';
 import { manageUser } from '../types/user';
+import { manageTweet } from '../types/tweets';
 
 export class API {
   // Properties
   app: Express;
   manageUser: manageUser;
+  manageTweet: manageTweet;
+  
   // Constructor
-  constructor(app: Express, manageUser: manageUser) {
+  constructor(app: Express, manageUser: manageUser, manageTweet: manageTweet) {
     this.app = app
     this.manageUser = manageUser
-    this.app.get('/hello', this.sayHello)
-  }
-  // Methods
-  private sayHello(req: Request, res: Response) {
-    res.send('Hello There!')
+    this.manageTweet = manageTweet
   }
 }

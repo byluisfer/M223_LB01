@@ -1,5 +1,5 @@
 import { Database } from '../database';
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -33,7 +33,7 @@ export class manageUser {
             const { username, password } = req.body;
 
             if (!username || !password) {
-                return res.status(400).json({ error: 'Username and Password required' });
+                return res.status(400).json({ error: '⚠️ Username and Password required' });
             }            
 
             const hashedPassword = await bcrypt.hash(password, 10);

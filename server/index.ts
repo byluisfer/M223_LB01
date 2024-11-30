@@ -4,6 +4,7 @@ import http from 'http'
 import { resolve, dirname } from 'path'
 import { Database } from './database'
 import { manageUser } from './types/user'
+import { manageTweet } from './types/tweets'
 
 class Backend {
   // Properties
@@ -12,6 +13,7 @@ class Backend {
   private _database: Database
   private _env: string
   private manageUser: manageUser
+  private manageTweet: manageTweet
 
   // Getters
   public get app(): Express {
@@ -34,7 +36,8 @@ class Backend {
     this._app.use(express.urlencoded({ extended: true })); // Middleware allows the app Express to parse URL-encoded data
     this._database = new Database()
     this.manageUser = new manageUser(this._database)
-    this._api = new API(this._app, this.manageUser)
+    this.manageTweet = new manageTweet(this._database)
+    this._api = new API(this._app, this.manageUser, this.manageTweet)
     this._env = process.env.NODE_ENV || 'development'
 
     this.setupStaticFiles()
@@ -51,6 +54,10 @@ class Backend {
     this._app.get('/', (req: Request, res: Response) => {
         const __dirname = resolve(dirname(''));
         res.sendFile(__dirname + '/client/index.html');
+    });
+
+    this._app.post('/tweets', (req: Request, res: Response) => {
+      this.manageTweet.createTweet(req, res);
     });
 
     this._app.get('/register', (req: Request, res: Response) => {
