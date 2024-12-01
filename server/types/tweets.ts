@@ -1,5 +1,10 @@
 import { Database } from '../database';
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
+process.env.TOKEN_SECRET;
 
 export class Tweet {
   public content: string;
@@ -20,16 +25,31 @@ export class manageTweet {
 
   createTweet = async (req: Request, res: Response) => {
     try {
-      const { content, user } = req.body;
+      const { content } = req.body;
+      const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
   
-      if (!content || !user) {
-        return res.status(400).json({ error: '⚠️ Content and User required.' });
+      if (!content || !token) {
+        return res.status(400).json({ error: '⚠️ Content and token are required.' });
       }
   
-      const query = `INSERT INTO tweets (user_id, content) VALUES ((SELECT id FROM users WHERE username = '${user}'), '${content}');`;
-      await this.db.executeSQL(query);
+      // Verify and decode the jwt token
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+      const username = decoded.username; // Get the username from the decod token
+  
+      // Find the user_id using the username
+      const userQuery = `SELECT id FROM users WHERE username = '${username}'`;
+      const userResult: any = await this.db.executeSQL(userQuery);
 
-      const tweet = new Tweet(content, user);
+      // console.log(userResult);
+  
+      const userId = userResult[0].id; // Get the user_id from the result
+
+      // console.log(userId);
+
+      const query = `INSERT INTO tweets (user_id, content) VALUES (${userId}, '${content}');`;
+      await this.db.executeSQL(query);
+  
+      const tweet = { content, username };
       res.status(201).json({ message: '👍 Tweet created successfully.', tweet });
     } catch (error) {
       console.error('👎 Error creating tweet:', error);
