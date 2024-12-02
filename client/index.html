@@ -38,7 +38,6 @@
             const data = await response.json(); // Take the response (in JSON format) and convert it to a JS object
             tweetsContainer.innerHTML = '';
 
-            // Create the HTML element of the tweet || https://www.geeksforgeeks.org/how-to-dynamically-create-new-elements-in-javascript/
             data.tweets.forEach(tweet => {
               const tweetElement = document.createElement('div');
               tweetElement.className = 'mt-6 p-2 text-white';
@@ -54,7 +53,6 @@
               const lineElement = document.createElement('hr');
               lineElement.className = 'mt-4 border-t-2 border-gray-300';
 
-              // https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
               tweetElement.appendChild(userElement);
               tweetElement.appendChild(contentElement);
               tweetElement.appendChild(lineElement);
