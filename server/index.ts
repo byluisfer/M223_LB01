@@ -3,8 +3,8 @@ import { API } from './api'
 import http from 'http'
 import { resolve, dirname } from 'path'
 import { Database } from './database'
-import { manageUser } from './types/user'
-import { manageTweet } from './types/tweets'
+import { manageUser } from './class/user'
+import { manageTweet } from './class/tweets'
 
 class Backend {
   // Properties
