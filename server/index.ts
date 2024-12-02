@@ -60,6 +60,10 @@ class Backend {
       this.manageTweet.createTweet(req, res);
     });
 
+    this._app.get('/tweets', (req: Request, res: Response) => {
+      this.manageTweet.seeTweets(req, res);
+    })
+
     this._app.get('/register', (req: Request, res: Response) => {
         const __dirname = resolve(dirname(''));
         res.sendFile(__dirname + '/client/register.html');

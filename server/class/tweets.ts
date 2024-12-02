@@ -55,5 +55,19 @@ export class manageTweet {
       console.error('👎 Error creating tweet:', error);
       res.status(500).json({ error: 'Error creating tweet.' });
     }
+  }; 
+  
+  seeTweets = async (req: Request, res: Response) => {
+    try {
+      const query = 'SELECT users.username, tweets.content FROM tweets INNER JOIN users ON tweets.user_id = users.id';
+      const tweets = await this.db.executeSQL(query);
+
+      //console.log(tweets);
+
+      res.status(200).json({ tweets }); // To save the tweets in JSON
+    } catch (error) {
+      console.error('Error loading tweets:', error);
+      res.status(500).json({ error: 'Error loading tweets.' });
+    }
   };  
 }

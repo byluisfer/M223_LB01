@@ -26,10 +26,44 @@
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', async () => {
         const tweetInput = document.getElementById('tweetInput');
         const postTweetButton = document.getElementById('postTweet');
         const tweetsContainer = document.getElementById('tweetsContainer');
+
+        // Function to call /tweets to load the tweets
+        async function loadTweets() {
+          try {
+            const response = await fetch('/tweets');
+            const data = await response.json(); // Take the response (in JSON format) and convert it to a JS object
+            tweetsContainer.innerHTML = '';
+
+            data.tweets.forEach(tweet => {
+              const tweetElement = document.createElement('div');
+              tweetElement.className = 'mt-6 p-2 text-white';
+
+              const userElement = document.createElement('h1');
+              userElement.className = 'text-xl font-bold';
+              userElement.textContent = tweet.username; // Show username
+
+              const contentElement = document.createElement('p');
+              contentElement.className = 'mt-2';
+              contentElement.textContent = tweet.content; // Show content
+
+              const lineElement = document.createElement('hr');
+              lineElement.className = 'mt-4 border-t-2 border-gray-300';
+
+              tweetElement.appendChild(userElement);
+              tweetElement.appendChild(contentElement);
+              tweetElement.appendChild(lineElement);
+              tweetsContainer.appendChild(tweetElement);
+            });
+          } catch (error) {
+            console.error('Error loading tweets:', error);
+          }
+        }
+
+        await loadTweets();
 
         postTweetButton.addEventListener('click', async () => {
           const content = tweetInput.value.trim();
@@ -41,52 +75,23 @@
 
           const response = await fetch('/tweets', {
             method: 'POST',
-            headers: {
+            headers: { 
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`, // To include the token
             },
             body: JSON.stringify({ content }), // Convert the data to JSON
           });
 
-          const data = await response.json(); // Take the respone (in JSON fromat) and convert it to a JavaScript object
-          console.log(data);
-
-          if (response.ok) {
-            // Create the HTML element of the tweet || https://www.geeksforgeeks.org/how-to-dynamically-create-new-elements-in-javascript/
-            const tweetElement = document.createElement('div');
-            tweetElement.className = 'mt-6 p-2 text-white';
-
-            const userElement = document.createElement('h1');
-            userElement.className = 'text-xl font-bold';
-            userElement.textContent = data.tweet.username;
-
-            const contentElement = document.createElement('p');
-            contentElement.className = 'mt-2';
-            contentElement.textContent = data.tweet.content;
-
-            const lineElement = document.createElement('hr');
-            lineElement.className = 'mt-4 border-t-2 border-gray-300';
-
-            // https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
-            tweetElement.appendChild(userElement);
-            tweetElement.appendChild(contentElement);
-            tweetElement.appendChild(lineElement);
-
-            // Add the tweet to the container
-            tweetsContainer.prepend(tweetElement); // https://developer.mozilla.org/en-US/docs/Web/API/Element/prepend
-
-            tweetInput.value = '';
-          } else {
-            alert(data.error || 'An error occurred while writing the tweet.');
-          }
+          tweetInput.value = '';
+          await loadTweets();
         });
-      });
 
-      // Script to logout
-      document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        alert('🫡 You are logged out');
-        window.location.href = '/login';
+        // Script to logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          localStorage.removeItem('token');
+          alert('🫡 You are logged out');
+          window.location.href = '/login';
+        });
       });
     </script>
   </body>
