@@ -1,6 +1,6 @@
 import { Request, Response, Express } from 'express';
-import { manageUser } from '../types/user';
-import { manageTweet } from '../types/tweets';
+import { manageUser } from '../class/user';
+import { manageTweet } from '../class/tweets';
 
 export class API {
   // Properties
