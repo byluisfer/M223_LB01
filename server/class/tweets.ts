@@ -141,4 +141,18 @@ export class manageTweet {
       res.status(500).json({ error: 'Error editing tweet.' });
     }
   };  
+
+  seeMyTweets = async (req: any, res: Response) => {
+    try {
+      const username = req.user.username; // To get the username
+
+      const query = `SELECT tweets.id, users.username, tweets.content FROM tweets INNER JOIN users ON tweets.user_id = users.id WHERE users.username = '${username}'`; // Filter to the authentificate username
+      const tweets = await this.db.executeSQL(query);
+
+      res.status(200).json({ tweets, username }); // To save the tweets and username in JSON
+    } catch (error) {
+      console.error('Error loading user tweets:', error);
+      res.status(500).json({ error: 'Error loading user tweets.' });
+    }
+  };
 }

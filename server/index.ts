@@ -99,6 +99,10 @@ class Backend {
     this._app.post('/changeUsername', (req: Request, res: Response) => {
       this.manageUser.changeUsername(req, res);
     })
+
+    this._app.get('/myTweets', authenticateToken, (req: Request, res: Response) => {
+      this.manageTweet.seeMyTweets(req, res);
+    });    
 }
 
   private startServer(): void {
