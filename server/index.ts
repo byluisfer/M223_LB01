@@ -90,6 +90,15 @@ class Backend {
         const __dirname = resolve(dirname(''));
         res.sendFile(__dirname + '/client/login.html');
     });
+
+    this._app.get('/changeUsername', (req: Request, res: Response) => {
+        const __dirname = resolve(dirname(''));
+        res.sendFile(__dirname + '/client/changeUsername.html');
+    })
+
+    this._app.post('/changeUsername', (req: Request, res: Response) => {
+      this.manageUser.changeUsername(req, res);
+    })
 }
 
   private startServer(): void {

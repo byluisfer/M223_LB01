@@ -86,4 +86,45 @@ export class manageUser {
             res.status(500).json({ error: 'Error during login' });
         }
     };    
+
+    changeUsername = async (req: Request, res: Response) => {
+        try {
+            const { username, password, newUsername } = req.body;
+            console.log(req.body);
+
+            if (!username || !password || !newUsername) {
+                return res.status(400).json({ error: '⚠️ Username, Password and NewUsername required' });
+            }
+
+            // To check if the newUsername already exists
+            const checkUsernameQuery = `SELECT * FROM users WHERE username = '${newUsername}'`;
+            const existedUser = await this.db.executeSQL(checkUsernameQuery);
+
+            if (Array.isArray(existedUser) && existedUser.length > 0) { // https://stackoverflow.com/questions/55530602/property-length-does-not-exists-on-type-okpacket-in-mysql2-module
+                return res.status(400).json({ error: 'Username already exists write another one' });
+            }
+
+            const usernameQuery = `SELECT * FROM users WHERE username = '${username}'`;
+            const users: any = await this.db.executeSQL(usernameQuery);
+    
+            if (Array.isArray(users) && users.length === 0) { // https://stackoverflow.com/questions/55530602/property-length-does-not-exists-on-type-okpacket-in-mysql2-module
+                return res.status(400).json({ error: 'Your username not exists' });
+            }
+    
+            const user = users[0]; // Must be only 1 user
+            const passwordMatch = await bcrypt.compare(password, user.password);
+    
+            if (!passwordMatch) {
+                return res.status(401).json({ error: 'Invalid username or password' });
+            }
+
+            const updateUsernameQuery = `UPDATE users SET username = '${newUsername}' WHERE id = ${user.id}`;
+            await this.db.executeSQL(updateUsernameQuery);
+
+            res.status(200).json({ message: 'Username change successfully.' })
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Error' })
+        }
+    }
 }
