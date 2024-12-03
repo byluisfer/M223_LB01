@@ -69,6 +69,10 @@ class Backend {
       this.manageTweet.deleteTweets(req, res);
     })
 
+    this._app.put('/tweets', authenticateToken, (req: Request, res: Response) => {
+      this.manageTweet.editTweets(req, res);
+    })
+
     this._app.get('/register', (req: Request, res: Response) => {
         const __dirname = resolve(dirname(''));
         res.sendFile(__dirname + '/client/register.html');

@@ -102,4 +102,43 @@ export class manageTweet {
       res.status(500).json({ error: 'Error deleting tweet.' });
     }
   }
+
+  editTweets = async (req: any, res: Response) => {
+    try {
+      const { tweetID, newContent } = req.body; // Get the tweetID and newContent (the new content that we will edit) from the request body
+      // console.log(req.body);
+      const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
+  
+      if (!tweetID || !newContent || !token) {
+        return res.status(400).json({ error: '⚠️ TweetID, newContent and token are required.' });
+      }
+  
+      // Verify and decode the jwt token
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+      const username = decoded.username; // Get the username from the decod token
+  
+      // Find the user_id using the username
+      const userQuery = `SELECT id FROM users WHERE username = '${username}'`;
+      const userResult: any = await this.db.executeSQL(userQuery);
+  
+      const userId = userResult[0].id; // Get the user_id from the result
+  
+      // Verifica que el tweet pertenezca al usuario
+      const tweetQuery = `SELECT * FROM tweets WHERE id = ${tweetID} AND user_id = ${userId}`;
+      const tweetResult: any = await this.db.executeSQL(tweetQuery);
+  
+      if (tweetResult.length === 0) {
+        return res.status(403).json({ error: 'You can only edit your own tweets.' });
+      }
+  
+      // Update the tweet content
+      const updateQuery = `UPDATE tweets SET content = '${newContent}' WHERE id = ${tweetID}`;
+      await this.db.executeSQL(updateQuery);
+  
+      res.status(201).json({ message: '👍 Tweet updated successfully.' });
+    } catch (error) {
+      console.error('👎 Error editing tweet:', error);
+      res.status(500).json({ error: 'Error editing tweet.' });
+    }
+  };  
 }

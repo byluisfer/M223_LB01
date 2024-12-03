@@ -68,10 +68,42 @@
               textContainer.appendChild(contentElement);
               contentContainer.appendChild(textContainer);
 
+              const buttonsContainer = document.createElement('div');
+              buttonsContainer.className = 'flex space-x-4'; // Align buttons to the right
+
+              // Edit button
+              if (tweet.username === currentUsername) {
+                const editBtn = document.createElement('button');
+                editBtn.innerHTML = '✏️';
+                editBtn.addEventListener('click', async () => {
+                  // https://developer.mozilla.org/es/docs/Web/API/Window/prompt
+                  const newContent = prompt('Edit your tweet:', tweet.content); // Open a windows to change the tweet content
+                  if (newContent && newContent.trim() !== '') {
+                    const response = await fetch('/tweets', {
+                      method: 'PUT',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                      },
+                      body: JSON.stringify({ tweetID: tweet.id, newContent }), // Conver to JSON
+                    })
+                    
+                    if (response.ok) {
+                      alert('👍 Tweet updated successfully!');
+                      loadTweets();
+                    } else {
+                      alert('Error to update the tweet.');
+                    }
+                  }
+                });
+
+                buttonsContainer.appendChild(editBtn);
+              }
+
+              // Delete button
               if (tweet.username === currentUsername) {
                 const deleteBtn = document.createElement('button');
                 deleteBtn.innerHTML = '🗑️';
-                deleteBtn.className = 'ml-4';
                 deleteBtn.addEventListener('click', async () => {
                   const response = await fetch('/tweets', {
                     method: 'DELETE',
@@ -88,8 +120,11 @@
                     alert(`Error deleting the tweet: ${errorData.error}`);
                   }
                 });
-                contentContainer.appendChild(deleteBtn);
+
+                buttonsContainer.appendChild(deleteBtn);
               }
+
+              contentContainer.appendChild(buttonsContainer);
     
               const lineElement = document.createElement('hr');
               lineElement.className = 'mt-4 border rounded-2xl border-gray-300';
@@ -98,7 +133,7 @@
               tweetElement.appendChild(contentContainer);
               tweetElement.appendChild(lineElement);
     
-              // Append the tweet element to the tweets container
+              // Append all to the tweets container on HTML
               tweetsContainer.appendChild(tweetElement);
             });
           } catch (error) {
