@@ -5,6 +5,7 @@ import { resolve, dirname } from 'path'
 import { Database } from './database'
 import { manageUser } from './class/user'
 import { manageTweet } from './class/tweets'
+import { authenticateToken } from './middleware/authMiddleware'
 
 class Backend {
   // Properties
@@ -51,20 +52,20 @@ class Backend {
   }
 
   private setupRoutes(): void {
-    this._app.get('/', (req: Request, res: Response) => {
+    this._app.get('/', authenticateToken, (req: Request, res: Response) => {
         const __dirname = resolve(dirname(''));
         res.sendFile(__dirname + '/client/index.html');
     });
 
-    this._app.post('/tweets', (req: Request, res: Response) => {
+    this._app.post('/tweets', authenticateToken, (req: Request, res: Response) => {
       this.manageTweet.createTweet(req, res);
     });
 
-    this._app.get('/tweets', (req: Request, res: Response) => {
+    this._app.get('/tweets', authenticateToken, (req: Request, res: Response) => {
       this.manageTweet.seeTweets(req, res);
     })
 
-    this._app.delete('/tweets', (req: Request, res: Response) => {
+    this._app.delete('/tweets', authenticateToken, (req: Request, res: Response) => {
       this.manageTweet.deleteTweets(req, res);
     })
 

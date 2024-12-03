@@ -34,7 +34,13 @@
         // See all tweets
         async function loadTweets() {
           try {
-            const response = await fetch('/tweets');
+            const response = await fetch('/tweets', {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${token}`, // To include the token
+              }
+            });
+            
             const data = await response.json(); // Take the response (in JSON format) and convert it to a JS object
             tweetsContainer.innerHTML = '';
     
