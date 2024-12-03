@@ -57,14 +57,16 @@ export class manageTweet {
     }
   }; 
   
-  seeTweets = async (req: Request, res: Response) => {
+  seeTweets = async (req: any, res: Response) => {
     try {
+      const username = req.user.username; /// To get the username
+      // console.log(username);
       const query = 'SELECT tweets.id, users.username, tweets.content FROM tweets INNER JOIN users ON tweets.user_id = users.id';
       const tweets = await this.db.executeSQL(query);
 
-      //console.log(tweets);
+      // console.log(tweets);
 
-      res.status(200).json({ tweets }); // To save the tweets in JSON
+      res.status(200).json({ tweets, username }); // To save the tweets and username in JSON
     } catch (error) {
       console.error('Error loading tweets:', error);
       res.status(500).json({ error: 'Error loading tweets.' });

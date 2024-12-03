@@ -40,8 +40,10 @@
                 'Authorization': `Bearer ${token}`, // To include the token
               }
             });
-            
+
             const data = await response.json(); // Take the response (in JSON format) and convert it to a JS object
+            // console.log(data.username);
+            const currentUsername = data.username; // Get the username
             tweetsContainer.innerHTML = '';
     
             // Create the HTML element of the tweet
@@ -62,34 +64,37 @@
               contentElement.className = 'mt-2 text-white';
               contentElement.textContent = tweet.content; // Show content
     
-              const deleteBtn = document.createElement('button');
-              deleteBtn.innerHTML = '🗑️';
-              deleteBtn.className = 'ml-4';
-              deleteBtn.addEventListener('click', async () => {
-                const response = await fetch('/tweets', {
-                  method: 'DELETE',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                  },
-                  body: JSON.stringify({ tweetID: tweet.id }), // Pass correct the tweet.id like tweetID
-                });
+              textContainer.appendChild(userElement);
+              textContainer.appendChild(contentElement);
+              contentContainer.appendChild(textContainer);
+
+              if (tweet.username === currentUsername) {
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '🗑️';
+                deleteBtn.className = 'ml-4';
+                deleteBtn.addEventListener('click', async () => {
+                  const response = await fetch('/tweets', {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ tweetID: tweet.id }), // Pass correct the tweet.id like tweetID
+                  });
     
-                if (response.ok) {
-                  await loadTweets();
-                } else {
-                  alert(`Error deleting the tweet: ${errorData.error}`);
-                }
-              });
+                  if (response.ok) {
+                    await loadTweets();
+                  } else {
+                    alert(`Error deleting the tweet: ${errorData.error}`);
+                  }
+                });
+                contentContainer.appendChild(deleteBtn);
+              }
     
               const lineElement = document.createElement('hr');
               lineElement.className = 'mt-4 border rounded-2xl border-gray-300';
     
               // Append elements to their respective containers
-              textContainer.appendChild(userElement);
-              textContainer.appendChild(contentElement);
-              contentContainer.appendChild(textContainer);
-              contentContainer.appendChild(deleteBtn);
               tweetElement.appendChild(contentContainer);
               tweetElement.appendChild(lineElement);
     
