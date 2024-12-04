@@ -7,6 +7,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 process.env.TOKEN_SECRET;
 
+export interface IUser {
+    id: number;
+    username: string;
+    password: string;
+    role?: string;
+    banned?: boolean;
+}
+
 export class User {
     public username: string;
     private password: string;
@@ -30,7 +38,7 @@ export class manageUser {
 
     register = async(req: Request, res: Response) => {
         try {
-            const { username, password } = req.body;
+            const { username, password } = req.body as IUser;
 
             if (!username || !password) {
                 return res.status(400).json({ error: '⚠️ Username and Password required' });
@@ -58,7 +66,7 @@ export class manageUser {
 
     login = async (req: Request, res: Response) => {
         try {
-            const { username, password } = req.body;
+            const { username, password } = req.body as IUser;
     
             if (!username || !password) {
                 return res.status(400).json({ error: '⚠️ Username and Password required' });

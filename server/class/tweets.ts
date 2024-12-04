@@ -6,6 +6,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 process.env.TOKEN_SECRET;
 
+export interface ITweet {
+  id: number;
+  userId: string;
+  content: string;
+  likes?: number;
+  dislikes?: number;
+}
+
 export class Tweet {
   public content: string;
   public user: string;
@@ -25,7 +33,7 @@ export class manageTweet {
 
   createTweet = async (req: Request, res: Response) => {
     try {
-        const { content } = req.body;
+        const { content } = req.body as ITweet;
         const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
 
         if (!content || !token) {
