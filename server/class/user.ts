@@ -127,4 +127,38 @@ export class manageUser {
             res.status(500).json({ error: 'Error' })
         }
     }
+
+    changePassword = async (req: Request, res: Response) => {
+        try {
+            const { username, password, newPassword } = req.body;
+
+            if (!username || !password || !newPassword) {
+                return res.status(400).json({ error: '⚠️ Username, Password and New Password required' });
+            }
+
+            const checkUsernameQuery = `SELECT * FROM users WHERE username = '${username}'`;
+            const users: any = await this.db.executeSQL(checkUsernameQuery);
+    
+            if (Array.isArray(users) && users.length === 0) { // https://stackoverflow.com/questions/55530602/property-length-does-not-exists-on-type-okpacket-in-mysql2-module
+                return res.status(400).json({ error: 'Your username not exists' });
+            }
+    
+            const user = users[0]; // Must be only 1 user
+            const passwordMatch = await bcrypt.compare(password, user.password);
+    
+            if (!passwordMatch) {
+                return res.status(401).json({ error: 'Invalid username or password' });
+            }
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            const updatePasswordQuery = `UPDATE users SET password = '${hashedPassword}' WHERE id = ${user.id}`;
+            await this.db.executeSQL(updatePasswordQuery);
+
+            res.status(200).json({ message: 'Username change successfully.' })
+        } catch (error) {
+            console.error('Error:', error);
+            res.status(500).json({ error: 'Error' })
+        }
+    }
 }

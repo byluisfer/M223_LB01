@@ -103,6 +103,15 @@ class Backend {
     this._app.get('/myTweets', authenticateToken, (req: Request, res: Response) => {
       this.manageTweet.seeMyTweets(req, res);
     });    
+
+    this._app.get('/changePassword', (req: Request, res: Response) => {
+      const __dirname = resolve(dirname(''));
+      res.sendFile(__dirname + '/client/changePassword.html');
+  })
+
+    this._app.post('/changePassword', (req: Request, res: Response) => {
+      this.manageUser.changePassword(req, res);
+    })
 }
 
   private startServer(): void {

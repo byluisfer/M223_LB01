@@ -17,14 +17,6 @@
 
       <!-- Dropdown menu -->
       <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-800 dark:divide-gray-600">
-          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-            <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Change name</a>
-            </li>
-            <li>
-              <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Change password</a>
-            </li>
-          </ul>
           <div class="py-1">
             <a id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
           </div>
@@ -151,7 +143,7 @@
               tweetElement.appendChild(lineElement);
     
               // Append all to the tweets container on HTML
-              tweetsContainer.appendChild(tweetElement);
+              tweetsContainer.prepend(tweetElement);
             });
           } catch (error) {
             console.error('Error loading tweets:', error);
