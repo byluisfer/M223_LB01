@@ -19,4 +19,17 @@ CREATE TABLE IF NOT EXISTS tweets (
 );
 `;
 
-export { USER_TABLE, TWEET_TABLE };
+const LIKES_TABLE = `
+CREATE TABLE IF NOT EXISTS likes (
+    id INT NOT NULL AUTO_INCREMENT,
+    post_id INT NOT NULL,
+    user_id INT NOT NULL,
+    isPositive BOOLEAN NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (post_id) REFERENCES tweets(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    UNIQUE(post_id, user_id)
+);
+`
+
+export { USER_TABLE, TWEET_TABLE, LIKES_TABLE };

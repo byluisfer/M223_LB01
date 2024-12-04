@@ -107,11 +107,19 @@ class Backend {
     this._app.get('/changePassword', (req: Request, res: Response) => {
       const __dirname = resolve(dirname(''));
       res.sendFile(__dirname + '/client/changePassword.html');
-  })
-
+    })
+  
     this._app.post('/changePassword', (req: Request, res: Response) => {
       this.manageUser.changePassword(req, res);
-    })
+    })  
+    
+    this._app.post('/tweets/like', authenticateToken, (req: Request, res: Response) => {
+      this.manageTweet.addLike(req, res);
+    });
+
+    this._app.get('/tweets/:post_id/likes', authenticateToken, (req: Request, res: Response) => {
+      this.manageTweet.seeLiksAndDislikes(req, res);
+    });  
 }
 
   private startServer(): void {

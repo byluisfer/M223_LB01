@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise'
-import { USER_TABLE, TWEET_TABLE } from './schema'
+import { USER_TABLE, TWEET_TABLE, LIKES_TABLE } from './schema'
 
 export class Database {
   // Properties
@@ -22,6 +22,7 @@ export class Database {
     console.log('Initializing DB schema...')
     await this.executeSQL(USER_TABLE)
     await this.executeSQL(TWEET_TABLE)
+    await this.executeSQL(LIKES_TABLE)
   }
 
   public executeSQL = async (query: string) => {

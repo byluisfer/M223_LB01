@@ -4,29 +4,52 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="./output.css" rel="stylesheet">
+    <link href="./output.css" rel="stylesheet" />
     <script src="client.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.5.3/dist/flowbite.min.js"></script> <!-- Include Flowbite JS for templates :) -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@1.5.3/dist/flowbite.min.js"></script>
     <title>MiniTwitter</title>
   </head>
   <body class="flex items-start justify-center min-h-screen bg-background">
     <div class="absolute top-14 left-10">
-      <!-- https://flowbite.com/docs/components/avatar/#user-dropdown -->
-      <img id="avatarButton" type="button" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="w-10 h-10 cursor-pointer" src="./accountMenu.svg" alt="User dropdown">
-
-      <!-- Dropdown menu -->
-      <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-800 dark:divide-gray-600">
-          <div class="py-1">
-            <a id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-          </div>
+      <img
+        id="avatarButton"
+        type="button"
+        data-dropdown-toggle="userDropdown"
+        data-dropdown-placement="bottom-start"
+        class="w-10 h-10 cursor-pointer"
+        src="./accountMenu.svg"
+        alt="User dropdown"
+      />
+      <div
+        id="userDropdown"
+        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-800 dark:divide-gray-600"
+      >
+        <div class="py-1">
+          <a
+            id="logoutBtn"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+            >Sign out</a
+          >
+        </div>
       </div>
     </div>
 
     <div class="flex flex-col space-x-4 p-4 rounded-xl mt-10 max-w-2xl w-full h-44">
-      <div class="p-4 rounded-xl bg-primary w-full drop-shadow-[0_0px_15px_rgba(242,242,242,0.3)]">
-        <textarea name="textarea" id="tweetInput" rows="2" placeholder="What is happening?!" class="w-full p-4 bg-primary text-white outline-none"></textarea>
-        <button id="postTweet" class="absolute bottom-4 right-4 px-4 py-2 text-white bg-secondary rounded-lg hover:bg-accent hover:text-black focus:outline-none transition-colors duration-300">
+      <div
+        class="p-4 rounded-xl bg-primary w-full drop-shadow-[0_0px_15px_rgba(242,242,242,0.3)]"
+      >
+        <textarea
+          name="textarea"
+          id="tweetInput"
+          rows="2"
+          placeholder="What is happening?!"
+          class="w-full p-4 bg-primary text-white outline-none"
+        ></textarea>
+        <button
+          id="postTweet"
+          class="absolute bottom-4 right-4 px-4 py-2 text-white bg-secondary rounded-lg hover:bg-accent hover:text-black focus:outline-none transition-colors duration-300"
+        >
           Tweet
         </button>
       </div>
@@ -35,150 +58,173 @@
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', async () => {
-        const tweetInput = document.getElementById('tweetInput');
-        const postTweetButton = document.getElementById('postTweet');
-        const tweetsContainer = document.getElementById('tweetsContainer');
-    
-        // See all tweets
+      document.addEventListener("DOMContentLoaded", async () => {
+        const tweetInput = document.getElementById("tweetInput");
+        const postTweetButton = document.getElementById("postTweet");
+        const tweetsContainer = document.getElementById("tweetsContainer");
+
         async function loadTweets() {
           try {
-            const response = await fetch('/tweets', {
-              method: 'GET',
+            const response = await fetch("/tweets", {
+              method: "GET",
               headers: {
-                'Authorization': `Bearer ${token}`, // To include the token
-              }
+                Authorization: `Bearer ${token}`, // Include the token
+              },
             });
 
-            const data = await response.json(); // Take the response (in JSON format) and convert it to a JS object
-            // console.log(data.username);
-            const currentUsername = data.username; // Get the username
-            tweetsContainer.innerHTML = '';
-    
-            // Create the HTML element of the tweet
-            data.tweets.forEach(tweet => {
-              const tweetElement = document.createElement('div');
-              tweetElement.className = 'mt-4 p-2';
-    
-              const contentContainer = document.createElement('div');
-              contentContainer.className = 'flex justify-between items-center';
-    
-              const textContainer = document.createElement('div');
-    
-              const userElement = document.createElement('h1');
-              userElement.className = 'text-xl font-bold text-white';
-              userElement.textContent = tweet.username; // Show username
-    
-              const contentElement = document.createElement('p');
-              contentElement.className = 'mt-2 text-white';
-              contentElement.textContent = tweet.content; // Show content
-    
+            const data = await response.json();
+            const currentUsername = data.username;
+            tweetsContainer.innerHTML = "";
+
+            data.tweets.forEach((tweet) => {
+              const tweetElement = document.createElement("div");
+              tweetElement.className = "mt-4 p-2";
+
+              const contentContainer = document.createElement("div");
+              contentContainer.className =
+                "flex justify-between items-center";
+
+              const textContainer = document.createElement("div");
+
+              const userElement = document.createElement("h1");
+              userElement.className = "text-xl font-bold text-white";
+              userElement.textContent = tweet.username;
+
+              const contentElement = document.createElement("p");
+              contentElement.className = "mt-2 text-white";
+              contentElement.textContent = tweet.content;
+
               textContainer.appendChild(userElement);
               textContainer.appendChild(contentElement);
               contentContainer.appendChild(textContainer);
 
-              const buttonsContainer = document.createElement('div');
-              buttonsContainer.className = 'flex space-x-4'; // Align buttons to the right
+              const buttonsContainer = document.createElement("div");
+              buttonsContainer.className = "flex space-x-4";
 
-              // Edit button
+              // Like button
+              const likeButton = document.createElement("button");
+              likeButton.className ="text-white";
+              likeButton.innerHTML = `👍 <span>${tweet.likes || 0}</span>`;
+              likeButton.addEventListener("click", async () => {
+                await handleLikeDislike(tweet.id, true);
+                loadTweets();
+              });
+
+              // Dislike button
+              const dislikeButton = document.createElement("button");
+              dislikeButton.className = "text-white";
+              dislikeButton.innerHTML = `👎 <span>${tweet.dislikes || 0}</span>`;
+              dislikeButton.addEventListener("click", async () => {
+                await handleLikeDislike(tweet.id, false);
+                loadTweets();
+              });
+
+              buttonsContainer.appendChild(likeButton);
+              buttonsContainer.appendChild(dislikeButton);
+
+              // Edit tweet
               if (tweet.username === currentUsername) {
-                const editBtn = document.createElement('button');
-                editBtn.innerHTML = '✏️';
-                editBtn.addEventListener('click', async () => {
-                  // https://developer.mozilla.org/es/docs/Web/API/Window/prompt
-                  const newContent = prompt('Edit your tweet:', tweet.content); // Open a windows to change the tweet content
-                  if (newContent && newContent.trim() !== '') {
-                    const response = await fetch('/tweets', {
-                      method: 'PUT',
+                const editBtn = document.createElement("button");
+                editBtn.innerHTML = "✏️";
+                editBtn.addEventListener("click", async () => {
+                  const newContent = prompt("Edit your tweet:", tweet.content);
+                  if (newContent && newContent.trim() !== "") {
+                    await fetch("/tweets", {
+                      method: "PUT",
                       headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                       },
-                      body: JSON.stringify({ tweetID: tweet.id, newContent }), // Conver to JSON
-                    })
-                    
-                    if (response.ok) {
-                      alert('👍 Tweet updated successfully!');
-                      loadTweets();
-                    } else {
-                      alert('Error to update the tweet.');
-                    }
+                      body: JSON.stringify({
+                        tweetID: tweet.id,
+                        newContent,
+                      }),
+                    });
+                    loadTweets();
                   }
+                });
+
+                // Delete tweet
+                const deleteBtn = document.createElement("button");
+                deleteBtn.innerHTML = "🗑️";
+                deleteBtn.addEventListener("click", async () => {
+                  await fetch("/tweets", {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ tweetID: tweet.id }),
+                  });
+                  loadTweets();
                 });
 
                 buttonsContainer.appendChild(editBtn);
-              }
-
-              // Delete button
-              if (tweet.username === currentUsername) {
-                const deleteBtn = document.createElement('button');
-                deleteBtn.innerHTML = '🗑️';
-                deleteBtn.addEventListener('click', async () => {
-                  const response = await fetch('/tweets', {
-                    method: 'DELETE',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({ tweetID: tweet.id }), // Pass correct the tweet.id like tweetID
-                  });
-    
-                  if (response.ok) {
-                    await loadTweets();
-                  } else {
-                    alert(`Error deleting the tweet: ${errorData.error}`);
-                  }
-                });
-
                 buttonsContainer.appendChild(deleteBtn);
               }
 
               contentContainer.appendChild(buttonsContainer);
-    
-              const lineElement = document.createElement('hr');
-              lineElement.className = 'mt-4 border rounded-2xl border-gray-300';
-    
-              // Append elements to their respective containers
+
+              const lineElement = document.createElement("hr");
+              lineElement.className =
+                "mt-4 border rounded-2xl border-gray-300";
+
               tweetElement.appendChild(contentContainer);
               tweetElement.appendChild(lineElement);
-    
-              // Append all to the tweets container on HTML
+
               tweetsContainer.prepend(tweetElement);
             });
           } catch (error) {
-            console.error('Error loading tweets:', error);
+            console.error("Error loading tweets:", error);
           }
         }
-    
-        await loadTweets();
-    
-        // Create tweets
-        postTweetButton.addEventListener('click', async () => {
+
+        // Create tweet
+        async function handleLikeDislike(postId, isPositive) {
+          try {
+            await fetch("/tweets/like", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ post_id: postId, isPositive }),
+            });
+          } catch (error) {
+            console.error("Error handling like/dislike:", error);
+          }
+        }
+
+        postTweetButton.addEventListener("click", async () => {
           const content = tweetInput.value.trim();
-    
+
           if (!content) {
-            alert('⚠️ Tweet content cannot be empty!');
+            alert("⚠️ Tweet content cannot be empty!");
             return;
           }
-    
-          const response = await fetch('/tweets', {
-            method: 'POST',
+
+          await fetch("/tweets", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`, // To include the token
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ content }), // Convert the data to JSON
+            body: JSON.stringify({ content }),
           });
-          tweetInput.value = '';
-          await loadTweets();
+
+          tweetInput.value = "";
+          loadTweets();
         });
-    
+
+        loadTweets();
+
+        // Logout button
         document.getElementById('logoutBtn').addEventListener('click', () => {
           localStorage.removeItem('token');
           alert('🫡 You are logged out');
           window.location.href = '/login';
         });
       });
-    </script>    
+    </script>
   </body>
 </html>
