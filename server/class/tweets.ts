@@ -34,6 +34,7 @@ export class manageTweet {
   
       // Verify and decode the jwt token
       const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+      //console.log(decoded)
       const username = decoded.username; // Get the username from the decod token
   
       // Find the user_id using the username
@@ -49,7 +50,7 @@ export class manageTweet {
       const query = `INSERT INTO tweets (user_id, content) VALUES (${userId}, '${content}');`;
       await this.db.executeSQL(query);
   
-      const tweet = { content, username };
+      const tweet = { username, content };
       res.status(201).json({ message: '👍 Tweet created successfully.', tweet });
     } catch (error) {
       console.error('👎 Error creating tweet:', error);
@@ -61,12 +62,12 @@ export class manageTweet {
     try {
       const username = req.user.username; /// To get the username
       // console.log(username);
-      const query = 'SELECT tweets.id, users.username, tweets.content FROM tweets INNER JOIN users ON tweets.user_id = users.id';
+      const query = 'SELECT tweets.id, tweets.content, users.username FROM tweets INNER JOIN users ON tweets.user_id = users.id';
       const tweets = await this.db.executeSQL(query);
 
       // console.log(tweets);
 
-      res.status(200).json({ tweets, username }); // To save the tweets and username in JSON
+      res.status(200).json({ username, tweets }); // To save the tweets and username in JSON
     } catch (error) {
       console.error('Error loading tweets:', error);
       res.status(500).json({ error: 'Error loading tweets.' });
@@ -91,6 +92,7 @@ export class manageTweet {
       const userResult: any = await this.db.executeSQL(userQuery);
 
       const userId = userResult[0].id; // Get the user_id from the result
+      // console.log(userId)
 
       // Only to delete the OURS tweets
       const deleteQuery = `DELETE FROM tweets WHERE id = ${tweetID} AND user_id = ${userId}`;

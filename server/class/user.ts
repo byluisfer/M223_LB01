@@ -61,7 +61,7 @@ export class manageUser {
             const { username, password } = req.body;
     
             if (!username || !password) {
-                return res.status(400).json({ error: 'Username and Password required' });
+                return res.status(400).json({ error: '⚠️ Username and Password required' });
             }
     
             const query = `SELECT * FROM users WHERE username = '${username}'`;
@@ -90,22 +90,22 @@ export class manageUser {
     changeUsername = async (req: Request, res: Response) => {
         try {
             const { username, password, newUsername } = req.body;
-            console.log(req.body);
+            // console.log(req.body);
 
             if (!username || !password || !newUsername) {
                 return res.status(400).json({ error: '⚠️ Username, Password and NewUsername required' });
             }
 
             // To check if the newUsername already exists
-            const checkUsernameQuery = `SELECT * FROM users WHERE username = '${newUsername}'`;
-            const existedUser = await this.db.executeSQL(checkUsernameQuery);
+            const checkNewUsernameQuery = `SELECT * FROM users WHERE username = '${newUsername}'`;
+            const existedUser = await this.db.executeSQL(checkNewUsernameQuery);
 
             if (Array.isArray(existedUser) && existedUser.length > 0) { // https://stackoverflow.com/questions/55530602/property-length-does-not-exists-on-type-okpacket-in-mysql2-module
-                return res.status(400).json({ error: 'Username already exists write another one' });
+                return res.status(400).json({ error: 'New Username already exists write another one' });
             }
 
-            const usernameQuery = `SELECT * FROM users WHERE username = '${username}'`;
-            const users: any = await this.db.executeSQL(usernameQuery);
+            const checkUsernameQuery = `SELECT * FROM users WHERE username = '${username}'`;
+            const users: any = await this.db.executeSQL(checkUsernameQuery);
     
             if (Array.isArray(users) && users.length === 0) { // https://stackoverflow.com/questions/55530602/property-length-does-not-exists-on-type-okpacket-in-mysql2-module
                 return res.status(400).json({ error: 'Your username not exists' });

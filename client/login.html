@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./output.css" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>MiniTwitter</title>
-</head>
-<body class="flex items-center justify-center min-h-screen bg-background">
+  </head>
+  <body class="flex items-center justify-center min-h-screen bg-background">
     <div class="max-w-md w-full bg-primary rounded-xl shadow-2xl overflow-hidden p-8 space-y-8 drop-shadow-[0_0px_15px_rgba(242,242,242,0.4)]">
       <h2 class="text-center text-3xl font-bold text-white">
         Welcome to MiniTwitter
@@ -65,6 +65,7 @@
       </div>
     </div>
 
+    <!-- Script to login a user -->
     <script>
       document.getElementById('loginForm').addEventListener('submit', async function(event) {
         event.preventDefault(); // https://www.w3schools.com/jsref/event_preventdefault.asp
@@ -77,10 +78,11 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ username, password }), // Convert the data to JSON
         });
 
         const data = await response.json(); // Take the respone (in JSON fromat) and convert it to a JavaScript object
+        // console.log(data)
 
         if (response.ok) {
             localStorage.setItem('token', data.token);
@@ -91,5 +93,5 @@
         }
       });
     </script>
-</body>
+  </body>
 </html>
