@@ -36,9 +36,22 @@
     </div>
 
     <div class="flex flex-col space-x-4 p-4 rounded-xl mt-10 max-w-2xl w-full h-44">
-      <div
-        class="p-4 rounded-xl bg-primary w-full drop-shadow-[0_0px_15px_rgba(242,242,242,0.3)]"
-      >
+      <div class="flex justify-center items-center">
+        <button
+          id="viewAllTweets"
+          class="tab-button px-4 py-2 text-gray-500 hover:text-white font-semibold transition-colors duration-300 focus:outline-none border-b-4 border-transparent"
+        >
+          For you
+        </button>
+        <button
+          id="viewMyTweets"
+          class="tab-button ml-6 px-4 py-2 text-gray-500 hover:text-white font-semibold transition-colors duration-300 focus:outline-none border-b-4 border-transparent"
+        >
+          Following
+        </button>
+      </div>      
+      
+      <div class="p-4 rounded-xl bg-primary w-full drop-shadow-[0_0px_15px_rgba(242,242,242,0.3)]">
         <textarea
           name="textarea"
           id="tweetInput"
@@ -62,10 +75,13 @@
         const tweetInput = document.getElementById("tweetInput");
         const postTweetButton = document.getElementById("postTweet");
         const tweetsContainer = document.getElementById("tweetsContainer");
+        const viewMyTweetsButton = document.getElementById("viewMyTweets");
+        const viewAllTweetsButton = document.getElementById("viewAllTweets");
 
-        async function loadTweets() {
+        async function loadTweets(filter = "personalTweets") {
           try {
-            const response = await fetch("/tweets", {
+            const endpoint = filter === "personalTweets" ? "/tweets" : "/myTweets";
+            const response = await fetch(endpoint, {
               method: "GET",
               headers: {
                 Authorization: `Bearer ${token}`, // Include the token
@@ -172,7 +188,7 @@
               tweetElement.appendChild(contentContainer);
               tweetElement.appendChild(lineElement);
 
-              tweetsContainer.prepend(tweetElement);
+              tweetsContainer.appendChild(tweetElement);
             });
           } catch (error) {
             console.error("Error loading tweets:", error);
@@ -216,7 +232,15 @@
           loadTweets();
         });
 
-        loadTweets();
+        viewAllTweetsButton.addEventListener("click", () => {
+          loadTweets("personalTweets"); // Cargar todos los tweets
+        });
+
+        viewMyTweetsButton.addEventListener("click", () => {
+          loadTweets("my"); // Cargar solo los tweets del usuario actual
+        });
+
+        loadTweets("personalTweets");
 
         // Logout button
         document.getElementById('logoutBtn').addEventListener('click', () => {

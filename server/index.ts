@@ -119,7 +119,7 @@ class Backend {
 
     this._app.get('/tweets/:post_id/likes', authenticateToken, (req: Request, res: Response) => {
       this.manageTweet.seeLiksAndDislikes(req, res);
-    });  
+    }); 
 }
 
   private startServer(): void {
