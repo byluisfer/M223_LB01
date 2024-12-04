@@ -40,6 +40,7 @@ services:
       - DB_NAME=minitwitter
       - DB_USER=minitwitter
       - DB_PASSWORD=supersecret123
+      - TOKEN_SECRET=4761b126d0e62220112544faddb0bca1c652d6e98913832b3c13eb827f6e83a8
     depends_on:
       - mariadb
 
